@@ -9,6 +9,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
+      UserMailer.with(to: @user.email, name: @user.name).complete_sign_up.deliver_later
       log_in(@user)
       redirect_to user_path(@user.id), notice: 'アカウントを登録しました。'
     else
